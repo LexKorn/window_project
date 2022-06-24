@@ -15151,14 +15151,86 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _slider__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./slider */ "./src/js/slider.js");
 /* harmony import */ var _modules_modals__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/modals */ "./src/js/modules/modals.js");
 /* harmony import */ var _modules_tabs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/tabs */ "./src/js/modules/tabs.js");
+/* harmony import */ var _modules_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/forms */ "./src/js/modules/forms.js");
+
 
 
 
 window.addEventListener('DOMContentLoaded', () => {
+  'use strict';
+
   Object(_modules_modals__WEBPACK_IMPORTED_MODULE_1__["default"])();
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.glazing_slider', '.glazing_block', '.glazing_content', 'active');
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.decoration_slider', '.no_click', '.decoration_content > div > div', 'after_click');
+  Object(_modules_forms__WEBPACK_IMPORTED_MODULE_3__["default"])();
 });
+
+/***/ }),
+
+/***/ "./src/js/modules/forms.js":
+/*!*********************************!*\
+  !*** ./src/js/modules/forms.js ***!
+  \*********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es_string_replace__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.string.replace */ "./node_modules/core-js/modules/es.string.replace.js");
+/* harmony import */ var core_js_modules_es_string_replace__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_replace__WEBPACK_IMPORTED_MODULE_0__);
+
+
+const forms = () => {
+  const forms = document.querySelectorAll('.form'),
+        inputs = document.querySelectorAll('.form_input'),
+        phoneInputs = document.querySelectorAll('input[name="user_phone"]');
+  phoneInputs.forEach(item => {
+    item.addEventListener('input', () => {
+      item.value = item.value.replace(/\D/, '');
+    });
+  });
+  const message = {
+    loading: 'Загрузка.... загрузка ....',
+    success: 'Спасибо! Скоро с вами свяжемся)',
+    failure: 'Ошибка! Что-то пошло не так....'
+  };
+
+  const postData = async (url, data) => {
+    document.querySelector('.status').textContent = message.loading;
+    let res = await fetch(url, {
+      method: 'POST',
+      body: data
+    });
+    return await res.text();
+  };
+
+  const clearInputs = () => {
+    inputs.forEach(item => {
+      item.value = '';
+    });
+  };
+
+  forms.forEach(item => {
+    item.addEventListener('submit', e => {
+      e.preventDefault();
+      let userMessage = document.createElement('div');
+      userMessage.classList.add('status');
+      item.appendChild(userMessage);
+      const formData = new FormData(item);
+      postData('./assets/server.php', formData).then(res => {
+        userMessage.textContent = message.success;
+        console.log(res);
+      }).catch(() => userMessage.textContent = message.failure).finally(() => {
+        clearInputs();
+        setTimeout(() => {
+          userMessage.remove();
+        }, 3000);
+      });
+    });
+  });
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (forms);
 
 /***/ }),
 
@@ -15176,6 +15248,12 @@ const modals = () => {
     const triggers = document.querySelectorAll(triggerSelector),
           modal = document.querySelector(modalSelector),
           close = document.querySelector(closeSelector);
+
+    function closeModal() {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
     triggers.forEach(item => {
       item.addEventListener('click', e => {
         if (e.target) {
@@ -15183,17 +15261,20 @@ const modals = () => {
         }
 
         modal.style.display = 'block';
-        document.body.style.overflow = 'hidden'; // document.body.classList.add('modal-open');
+        document.body.style.overflow = 'hidden';
       });
     });
     close.addEventListener('click', () => {
-      modal.style.display = 'none';
-      document.body.style.overflow = ''; // document.body.classList.remove('modal-open');
+      closeModal();
     });
     modal.addEventListener('click', e => {
       if (e.target === modal) {
-        modal.style.display = 'none';
-        document.body.style.overflow = ''; // document.body.classList.remove('modal-open');
+        closeModal();
+      }
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closeModal();
       }
     });
   }
