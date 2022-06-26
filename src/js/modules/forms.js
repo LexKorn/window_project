@@ -1,6 +1,7 @@
 import checkNumInputs from "./checkNumInputs";
+// import {closeModal} from "./modals";
 
-const forms = () => {
+const forms = (state) => {
     const forms = document.querySelectorAll('.form'),
           inputs = document.querySelectorAll('.form_input');
 
@@ -39,6 +40,12 @@ const forms = () => {
 
             const formData = new FormData(item);
 
+            if (item.getAttribute('data-calc') === 'end') {
+                for (let key in state) {
+                    formData.append(key, state[key]);
+                }               
+            }
+
             postData('./assets/server.php', formData)
                 .then(res => {
                     userMessage.textContent = message.success;
@@ -50,7 +57,10 @@ const forms = () => {
                     setTimeout(() => {
                         userMessage.remove();
                     }, 3000);
-                })
+                    // if (item.getAttribute('data-calc') === 'end') {
+                    //     closeModal();
+                    // }
+                });
         });
     });
 }

@@ -1,5 +1,5 @@
-const checkNumInputs = (selectorInputs) => {
-    const inputs = document.querySelectorAll(selectorInputs);
+const checkNumInputs = (selector) => {
+    const inputs = document.querySelectorAll(selector);
 
     inputs.forEach(item => {
         item.addEventListener('input', () => {

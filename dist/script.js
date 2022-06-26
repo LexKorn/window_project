@@ -15167,7 +15167,7 @@ window.addEventListener('DOMContentLoaded', () => {
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.glazing_slider', '.glazing_block', '.glazing_content', 'active');
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.decoration_slider', '.no_click', '.decoration_content > div > div', 'after_click');
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.balcon_icons', '.balcon_icons_img', '.big_img  > img', 'do_image_more', 'inline');
-  Object(_modules_forms__WEBPACK_IMPORTED_MODULE_3__["default"])();
+  Object(_modules_forms__WEBPACK_IMPORTED_MODULE_3__["default"])(modalState);
 });
 
 /***/ }),
@@ -15181,18 +15181,62 @@ window.addEventListener('DOMContentLoaded', () => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _checkNumInputs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./checkNumInputs */ "./src/js/modules/checkNumInputs.js");
+
+
 const changeModalState = state => {
   const windowForms = document.querySelectorAll('.balcon_icons_img'),
-        windowWidth = document.querySelector('#width'),
-        windowHeight = document.querySelector('#height'),
-        windowType = document.querySelector('#view_type'),
-        windowProfile = document.querySelector('.checkbox');
-  windowForms.forEach((item, i) => {
-    item.addEventListener('click', () => {
-      state.form = i;
-      console.log(state);
+        windowWidth = document.querySelectorAll('#width'),
+        windowHeight = document.querySelectorAll('#height'),
+        windowType = document.querySelectorAll('#view_type'),
+        windowProfile = document.querySelectorAll('.checkbox');
+  Object(_checkNumInputs__WEBPACK_IMPORTED_MODULE_0__["default"])('#width');
+  Object(_checkNumInputs__WEBPACK_IMPORTED_MODULE_0__["default"])('#height');
+
+  function bindActionsByForm(event, elem, prop) {
+    elem.forEach((item, i) => {
+      item.addEventListener(event, () => {
+        switch (item.nodeName) {
+          case 'SPAN':
+            state[prop] = i;
+            break;
+
+          case 'INPUT':
+            if (item.getAttribute('type') === 'checkbox') {
+              i === 0 ? state[prop] = 'Холодное' : state[prop] = 'Тёплое';
+              elem.forEach((box, j) => {
+                box.checked = false;
+
+                if (j === i) {
+                  box.checked = true;
+                }
+              });
+            } else {
+              state[prop] = item.value;
+            }
+
+            break;
+
+          case 'SELECT':
+            state[prop] = item.value;
+            break;
+        } // if (elem.length > 1) {
+        //     state[prop] = i;
+        // } else {
+        //     state[prop] = item.value;
+        // }
+
+
+        console.log(state);
+      });
     });
-  });
+  }
+
+  bindActionsByForm('click', windowForms, 'form');
+  bindActionsByForm('input', windowWidth, 'width');
+  bindActionsByForm('input', windowHeight, 'height');
+  bindActionsByForm('change', windowType, 'type');
+  bindActionsByForm('change', windowProfile, 'checkbox');
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (changeModalState);
@@ -15212,8 +15256,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_modules_es_string_replace__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_replace__WEBPACK_IMPORTED_MODULE_0__);
 
 
-const checkNumInputs = selectorInputs => {
-  const inputs = document.querySelectorAll(selectorInputs);
+const checkNumInputs = selector => {
+  const inputs = document.querySelectorAll(selector);
   inputs.forEach(item => {
     item.addEventListener('input', () => {
       item.value = item.value.replace(/\D/, '');
@@ -15235,9 +15279,9 @@ const checkNumInputs = selectorInputs => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _checkNumInputs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./checkNumInputs */ "./src/js/modules/checkNumInputs.js");
+ // import {closeModal} from "./modals";
 
-
-const forms = () => {
+const forms = state => {
   const forms = document.querySelectorAll('.form'),
         inputs = document.querySelectorAll('.form_input');
   const message = {
@@ -15269,6 +15313,13 @@ const forms = () => {
       userMessage.classList.add('status');
       item.appendChild(userMessage);
       const formData = new FormData(item);
+
+      if (item.getAttribute('data-calc') === 'end') {
+        for (let key in state) {
+          formData.append(key, state[key]);
+        }
+      }
+
       postData('./assets/server.php', formData).then(res => {
         userMessage.textContent = message.success;
         console.log(res);
@@ -15276,7 +15327,9 @@ const forms = () => {
         clearInputs();
         setTimeout(() => {
           userMessage.remove();
-        }, 3000);
+        }, 3000); // if (item.getAttribute('data-calc') === 'end') {
+        //     closeModal();
+        // }
       });
     });
   });
@@ -15350,7 +15403,8 @@ const modals = () => {
   bindModal('.popup_calc_btn', '.popup_calc', '.popup_calc_close');
   bindModal('.popup_calc_button', '.popup_calc_profile', '.popup_calc_profile_close', false);
   bindModal('.popup_calc_profile_button', '.popup_calc_end', '.popup_calc_end_close', false); // showModalByTime('.popup', 60000);
-};
+}; // export {closeModal};
+
 
 /* harmony default export */ __webpack_exports__["default"] = (modals);
 
