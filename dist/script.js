@@ -15154,6 +15154,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/forms */ "./src/js/modules/forms.js");
 /* harmony import */ var _modules_changeModalState__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/changeModalState */ "./src/js/modules/changeModalState.js");
 /* harmony import */ var _modules_timer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/timer */ "./src/js/modules/timer.js");
+/* harmony import */ var _modules_images__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/images */ "./src/js/modules/images.js");
+
 
 
 
@@ -15163,8 +15165,14 @@ __webpack_require__.r(__webpack_exports__);
 window.addEventListener('DOMContentLoaded', () => {
   'use strict';
 
-  const modalState = {};
-  const deadline = '2022-07-01';
+  const modalState = {
+    form: 0,
+    width: '',
+    height: '',
+    type: 'tree',
+    checkbox: ''
+  };
+  const deadline = '2022-07-10';
   Object(_modules_changeModalState__WEBPACK_IMPORTED_MODULE_4__["default"])(modalState);
   Object(_modules_modals__WEBPACK_IMPORTED_MODULE_1__["default"])();
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.glazing_slider', '.glazing_block', '.glazing_content', 'active');
@@ -15172,6 +15180,7 @@ window.addEventListener('DOMContentLoaded', () => {
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.balcon_icons', '.balcon_icons_img', '.big_img  > img', 'do_image_more', 'inline');
   Object(_modules_forms__WEBPACK_IMPORTED_MODULE_3__["default"])(modalState);
   Object(_modules_timer__WEBPACK_IMPORTED_MODULE_5__["default"])('.container1', deadline);
+  Object(_modules_images__WEBPACK_IMPORTED_MODULE_6__["default"])();
 });
 
 /***/ }),
@@ -15283,11 +15292,12 @@ const checkNumInputs = selector => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _checkNumInputs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./checkNumInputs */ "./src/js/modules/checkNumInputs.js");
- // import {closeModal} from "./modals";
+
 
 const forms = state => {
   const forms = document.querySelectorAll('.form'),
-        inputs = document.querySelectorAll('.form_input');
+        inputs = document.querySelectorAll('input'),
+        checkboxes = document.querySelectorAll('.checkbox');
   const message = {
     loading: 'Загрузка.... загрузка ....',
     success: 'Спасибо! Скоро с вами свяжемся)',
@@ -15306,6 +15316,9 @@ const forms = state => {
   const clearInputs = () => {
     inputs.forEach(item => {
       item.value = '';
+    });
+    checkboxes.forEach(item => {
+      item.checked = false;
     });
   };
 
@@ -15331,15 +15344,57 @@ const forms = state => {
         clearInputs();
         setTimeout(() => {
           userMessage.remove();
-        }, 3000); // if (item.getAttribute('data-calc') === 'end') {
-        //     closeModal();
-        // }
+
+          if (item.getAttribute('data-calc') === 'end') {
+            document.querySelector('.popup_calc_end').style.display = 'none';
+            document.body.style.overflow = '';
+          }
+        }, 2000);
       });
     });
   });
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (forms);
+
+/***/ }),
+
+/***/ "./src/js/modules/images.js":
+/*!**********************************!*\
+  !*** ./src/js/modules/images.js ***!
+  \**********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+const images = () => {
+  const imgModal = document.createElement('div'),
+        worksContainer = document.querySelector('.works'),
+        bigImg = document.createElement('img');
+  imgModal.classList.add('popup');
+  worksContainer.appendChild(imgModal);
+  imgModal.appendChild(bigImg);
+  imgModal.style.justifyContent = 'center';
+  imgModal.style.alignItems = 'center';
+  imgModal.style.display = 'none';
+  worksContainer.addEventListener('click', e => {
+    e.preventDefault();
+    let target = e.target;
+
+    if (target && target.classList.contains('preview')) {
+      imgModal.style.display = 'flex';
+      const path = target.parentNode.getAttribute('href');
+      bigImg.setAttribute('src', path);
+    }
+
+    if (target && target.matches('div.popup')) {
+      imgModal.style.display = 'none';
+    }
+  });
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (images);
 
 /***/ }),
 
@@ -15357,7 +15412,9 @@ const modals = () => {
     const triggers = document.querySelectorAll(triggerSelector),
           modal = document.querySelector(modalSelector),
           close = document.querySelector(closeSelector),
-          windows = document.querySelectorAll('[data-modal]');
+          windows = document.querySelectorAll('[data-modal]'),
+          inputs = document.querySelectorAll('.popup_calc_content input'),
+          checkboxes = document.querySelectorAll('.checkbox');
 
     function closeModal() {
       windows.forEach(item => {
@@ -15375,7 +15432,17 @@ const modals = () => {
 
         windows.forEach(item => {
           item.style.display = 'none';
-        });
+        }); // if (item.getAttribute('data-calc') === 'trigger') {
+        //     inputs.forEach(item => {
+        //         if (item.value == '') {
+        //             console.log('Введите недостающие данные');
+        //         }
+        //     });
+        //     if (checkboxes.some(item => item.checked == true)) {
+        //             console.log('Введите недостающие данные');
+        //     }                                       
+        // }
+
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
       });
@@ -15407,8 +15474,7 @@ const modals = () => {
   bindModal('.popup_calc_btn', '.popup_calc', '.popup_calc_close');
   bindModal('.popup_calc_button', '.popup_calc_profile', '.popup_calc_profile_close', false);
   bindModal('.popup_calc_profile_button', '.popup_calc_end', '.popup_calc_end_close', false); // showModalByTime('.popup', 60000);
-}; // export {closeModal};
-
+};
 
 /* harmony default export */ __webpack_exports__["default"] = (modals);
 
@@ -15484,10 +15550,14 @@ const timer = (id, deadline) => {
           days = Math.floor(t / 1000 / 60 / 60 / 24);
     return {
       'total': t,
-      'seconds': seconds,
-      'minutes': minutes,
-      'hours': hours,
-      'days': days
+      // 'seconds': seconds,
+      // 'minutes': minutes,
+      // 'hours': hours,
+      // 'days': days
+      seconds,
+      minutes,
+      hours,
+      days
     };
   };
 

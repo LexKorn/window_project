@@ -3,7 +3,9 @@ const modals = () => {
         const triggers = document.querySelectorAll(triggerSelector),
               modal = document.querySelector(modalSelector),
               close = document.querySelector(closeSelector),
-              windows = document.querySelectorAll('[data-modal]');
+              windows = document.querySelectorAll('[data-modal]'),
+              inputs = document.querySelectorAll('.popup_calc_content input'),
+              checkboxes = document.querySelectorAll('.checkbox');
 
         function closeModal() {
             windows.forEach(item => {
@@ -23,6 +25,18 @@ const modals = () => {
                 windows.forEach(item => {
                     item.style.display = 'none';
                 });
+
+                // if (item.getAttribute('data-calc') === 'trigger') {
+                //     inputs.forEach(item => {
+                //         if (item.value == '') {
+                //             console.log('Введите недостающие данные');
+                //         }
+                //     });
+
+                //     if (checkboxes.some(item => item.checked == true)) {
+                //             console.log('Введите недостающие данные');
+                //     }                                       
+                // }
                     
                 modal.style.display = 'block';
                 document.body.style.overflow = 'hidden';
@@ -61,5 +75,4 @@ const modals = () => {
     // showModalByTime('.popup', 60000);
 };
 
-// export {closeModal};
 export default modals;

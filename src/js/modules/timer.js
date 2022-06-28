@@ -8,10 +8,14 @@ const timer = (id, deadline) => {
 
         return {
             'total': t,
-            'seconds': seconds,
-            'minutes': minutes,
-            'hours': hours,
-            'days': days
+            // 'seconds': seconds,
+            // 'minutes': minutes,
+            // 'hours': hours,
+            // 'days': days
+            seconds,
+            minutes,
+            hours,
+            days
         };
     }
 

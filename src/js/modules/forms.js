@@ -1,9 +1,9 @@
 import checkNumInputs from "./checkNumInputs";
-// import {closeModal} from "./modals";
 
 const forms = (state) => {
     const forms = document.querySelectorAll('.form'),
-          inputs = document.querySelectorAll('.form_input');
+          inputs = document.querySelectorAll('input'),
+          checkboxes = document.querySelectorAll('.checkbox');
 
     const message = {
         loading: 'Загрузка.... загрузка ....',
@@ -26,6 +26,10 @@ const forms = (state) => {
         inputs.forEach(item => {
             item.value = '';
         });
+
+        checkboxes.forEach(item => {
+            item.checked = false;
+        })
     };
 
     checkNumInputs('input[name="user_phone"]');
@@ -56,10 +60,11 @@ const forms = (state) => {
                     clearInputs();
                     setTimeout(() => {
                         userMessage.remove();
-                    }, 3000);
-                    // if (item.getAttribute('data-calc') === 'end') {
-                    //     closeModal();
-                    // }
+                        if (item.getAttribute('data-calc') === 'end') {
+                            document.querySelector('.popup_calc_end').style.display = 'none';
+                            document.body.style.overflow = '';
+                        }
+                    }, 2000);            
                 });
         });
     });
