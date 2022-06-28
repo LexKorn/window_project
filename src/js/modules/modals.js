@@ -3,9 +3,9 @@ const modals = () => {
         const triggers = document.querySelectorAll(triggerSelector),
               modal = document.querySelector(modalSelector),
               close = document.querySelector(closeSelector),
-              windows = document.querySelectorAll('[data-modal]'),
-              inputs = document.querySelectorAll('.popup_calc_content input'),
-              checkboxes = document.querySelectorAll('.checkbox');
+              windows = document.querySelectorAll('[data-modal]');
+            //   inputs = document.querySelectorAll('.popup_calc_content input'),
+            //   checkboxes = document.querySelectorAll('.checkbox');
 
         function closeModal() {
             windows.forEach(item => {
