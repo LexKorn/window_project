@@ -15185,6 +15185,31 @@ window.addEventListener('DOMContentLoaded', () => {
 
 /***/ }),
 
+/***/ "./src/js/modules/calcScroll.js":
+/*!**************************************!*\
+  !*** ./src/js/modules/calcScroll.js ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+const calcScroll = () => {
+  let div = document.createElement('div');
+  div.style.width = '50px';
+  div.style.height = '50px';
+  div.style.overflowY = 'scroll';
+  div.style.visibility = 'hidden';
+  document.body.appendChild(div);
+  let scrollWidth = div.offsetWidth - div.clientWidth;
+  div.remove();
+  return scrollWidth;
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (calcScroll);
+
+/***/ }),
+
 /***/ "./src/js/modules/changeModalState.js":
 /*!********************************************!*\
   !*** ./src/js/modules/changeModalState.js ***!
@@ -15233,12 +15258,7 @@ const changeModalState = state => {
           case 'SELECT':
             state[prop] = item.value;
             break;
-        } // if (elem.length > 1) {
-        //     state[prop] = i;
-        // } else {
-        //     state[prop] = item.value;
-        // }
-
+        }
 
         console.log(state);
       });
@@ -15368,10 +15388,14 @@ const forms = state => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _calcScroll__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./calcScroll */ "./src/js/modules/calcScroll.js");
+
+
 const images = () => {
   const imgModal = document.createElement('div'),
         worksContainer = document.querySelector('.works'),
-        bigImg = document.createElement('img');
+        bigImg = document.createElement('img'),
+        scroll = Object(_calcScroll__WEBPACK_IMPORTED_MODULE_0__["default"])();
   imgModal.classList.add('popup_img');
   worksContainer.appendChild(imgModal);
   imgModal.appendChild(bigImg);
@@ -15383,6 +15407,12 @@ const images = () => {
   //     display: none;      
   // `;
 
+  const closeImg = () => {
+    imgModal.style.display = 'none';
+    document.body.style.overflow = '';
+    document.body.style.marginRight = `0px`;
+  };
+
   worksContainer.addEventListener('click', e => {
     e.preventDefault();
     let target = e.target;
@@ -15390,6 +15420,7 @@ const images = () => {
     if (target && target.classList.contains('preview')) {
       imgModal.style.display = 'flex';
       document.body.style.overflow = 'hidden';
+      document.body.style.marginRight = `${scroll}px`;
       const path = target.parentNode.getAttribute('href');
       bigImg.setAttribute('src', path);
       bigImg.style.maxWidth = '90%';
@@ -15397,8 +15428,12 @@ const images = () => {
     }
 
     if (target && target.matches('div.popup_img')) {
-      imgModal.style.display = 'none';
-      document.body.style.overflow = '';
+      closeImg();
+    }
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      closeImg();
     }
   });
 };
@@ -15416,14 +15451,16 @@ const images = () => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _calcScroll__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./calcScroll */ "./src/js/modules/calcScroll.js");
+
+
 const modals = () => {
   function bindModal(triggerSelector, modalSelector, closeSelector, closeByOverlay = true) {
     const triggers = document.querySelectorAll(triggerSelector),
           modal = document.querySelector(modalSelector),
           close = document.querySelector(closeSelector),
           windows = document.querySelectorAll('[data-modal]'),
-          scroll = calcScroll(); //   inputs = document.querySelectorAll('.popup_calc_content input'),
-    //   checkboxes = document.querySelectorAll('.checkbox');
+          scroll = Object(_calcScroll__WEBPACK_IMPORTED_MODULE_0__["default"])();
 
     function closeModal() {
       windows.forEach(item => {
@@ -15442,17 +15479,7 @@ const modals = () => {
 
         windows.forEach(item => {
           item.style.display = 'none';
-        }); // if (item.getAttribute('data-calc') === 'trigger') {
-        //     inputs.forEach(item => {
-        //         if (item.value == '') {
-        //             console.log('Введите недостающие данные');
-        //         }
-        //     });
-        //     if (checkboxes.some(item => item.checked == true)) {
-        //             console.log('Введите недостающие данные');
-        //     }                                       
-        // }
-
+        });
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
         document.body.style.marginRight = `${scroll}px`;
@@ -15480,23 +15507,12 @@ const modals = () => {
     }, time);
   }
 
-  function calcScroll() {
-    let div = document.createElement('div');
-    div.style.width = '50px';
-    div.style.height = '50px';
-    div.style.overflowY = 'scroll';
-    div.style.visibility = 'hidden';
-    document.body.appendChild(div);
-    let scrollWidth = div.offsetWidth - div.clientWidth;
-    div.remove();
-    return scrollWidth;
-  }
-
   bindModal('.popup_engineer_btn', '.popup_engineer', '.popup_engineer .popup_close');
   bindModal('.phone_link', '.popup', '.popup .popup_close');
   bindModal('.popup_calc_btn', '.popup_calc', '.popup_calc_close');
   bindModal('.popup_calc_button', '.popup_calc_profile', '.popup_calc_profile_close', false);
-  bindModal('.popup_calc_profile_button', '.popup_calc_end', '.popup_calc_end_close', false); // showModalByTime('.popup', 60000);
+  bindModal('.popup_calc_profile_button', '.popup_calc_end', '.popup_calc_end_close', false);
+  showModalByTime('.popup', 60000);
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (modals);
@@ -15573,10 +15589,6 @@ const timer = (id, deadline) => {
           days = Math.floor(t / 1000 / 60 / 60 / 24);
     return {
       'total': t,
-      // 'seconds': seconds,
-      // 'minutes': minutes,
-      // 'hours': hours,
-      // 'days': days
       seconds,
       minutes,
       hours,

@@ -35,12 +35,6 @@ const changeModalState = (state) => {
                         break;
                 }
 
-
-                // if (elem.length > 1) {
-                //     state[prop] = i;
-                // } else {
-                //     state[prop] = item.value;
-                // }
                 console.log(state);
             });
         });

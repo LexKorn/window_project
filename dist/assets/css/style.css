@@ -705,7 +705,7 @@ textarea:focus {
   color: black;
   border-radius: 10px;
   text-align: center;
-  width: 360px;
+  max-width: 360px;
   height: 150px;
 }
 
