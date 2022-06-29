@@ -15398,14 +15398,15 @@ const images = () => {
         scroll = Object(_calcScroll__WEBPACK_IMPORTED_MODULE_0__["default"])();
   imgModal.classList.add('popup_img');
   worksContainer.appendChild(imgModal);
-  imgModal.appendChild(bigImg);
-  imgModal.style.justifyContent = 'center';
-  imgModal.style.alignItems = 'center';
-  imgModal.style.display = 'none'; // imgModal.style.cssText = `        
-  //     justifyContent: center;
-  //     alignItems: center;  
-  //     display: none;      
-  // `;
+  imgModal.appendChild(bigImg); // imgModal.style.justifyContent = 'center';
+  // imgModal.style.alignItems = 'center';
+  // imgModal.style.display = 'none';
+
+  imgModal.style.cssText = `        
+        justify-content: center;
+        align-items: center;  
+        display: none;      
+    `;
 
   const closeImg = () => {
     imgModal.style.display = 'none';

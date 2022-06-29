@@ -10,15 +10,15 @@ const images = () => {
     worksContainer.appendChild(imgModal);
     imgModal.appendChild(bigImg);
 
-    imgModal.style.justifyContent = 'center';
-    imgModal.style.alignItems = 'center';
-    imgModal.style.display = 'none';
+    // imgModal.style.justifyContent = 'center';
+    // imgModal.style.alignItems = 'center';
+    // imgModal.style.display = 'none';
 
-    // imgModal.style.cssText = `        
-    //     justifyContent: center;
-    //     alignItems: center;  
-    //     display: none;      
-    // `;
+    imgModal.style.cssText = `        
+        justify-content: center;
+        align-items: center;  
+        display: none;      
+    `;
 
     const closeImg = () => {
         imgModal.style.display = 'none';
